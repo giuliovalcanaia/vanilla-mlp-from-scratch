@@ -61,6 +61,34 @@ Onde a relação entre a posição unidimensional $i$ do vetor e os índices de 
 
 $$i = (m - 1) \cdot 28 + n, \quad \text{para } m, n \in \{1, \dots, 28\}$$
 
+## Representação computacional
+Uma vez que a imagem está transformada em um vetor-coluna, é possível dizer que esta é a representação computacional da nossa imagem. A única diferença se dá nos termos. Cada uma das dimensões do vetor assume uma representação de um neurônio dentro dos termos da computação.
+
+
+Apenas para manter-mos a padronização dos termos utilizados pela computação, e já paralelamente aproveitar para explicar de onde vem um dos termos que está presente no título, é importante explicar um conceito chave para redes neurais, chamado de *perceptron*. 
+
+### Perceptron
+O Perceptron é o modelo mais básico e fundamental de um neurônio artificial. Ele foi criado em 1958 por Frank Rosenblatt e serve como o bloco de construção inicial para o que hoje conhecemos como Redes Neurais Artificiais e Aprendizado Profundo (Deep Learning).
+
+#### Funcionamento
+
+1. Entradas ($x_1, x_2, \dots, x_n$): São os dados que o Perceptron recebe (por exemplo, os pixels de uma imagem ou características de um problema)
+2. Pesos ($w_1, w_2, \dots, w_n$): Cada entrada possui um peso associado. O peso representa a "importância" daquela entrada na decisão final
+3. Soma Ponderada + Viés ($b$): O Perceptron calcula a soma de todas as entradas multiplicadas por seus respectivos pesos e adiciona uma constante chamada bias (viés), que ajuda a ajustar o limiar da decisão:$$z = (x_1 \cdot w_1 + x_2 \cdot w_2 + \dots + x_n \cdot w_n) + b$$
+4. Função de Ativação: O resultado dessa soma $z$ passa por uma função degrau (step function). Se a soma for maior ou igual a zero (ou um determinado limiar), a saída será $1$ (ativado). Se for menor, a saída será $0$ (desativado):$$y = \begin{cases} 1, & \text{se } z \geq 0 \\ 0, & \text{se } z < 0 \end{cases}$$
+
+#### Limitação
+Consegue resolver apenas problemas de ordem linear, e classificação binária. 
+
+Exemplo: Decidir se uma mensagem é Spam (1) ou Não-Spam (0) com base no número de palavras suspeitas.
+
+#### Melhorias
+Para superar a limitação de separar apenas dados linearmente separáveis, surgiu o MLP (Multi-Layer Perceptron) (Falta citação):
+
+1. Em vez de um único Perceptron, agrupamos vários neurônios em camadas (Camada de Entrada, Camadas Ocultas e Camada de Saída).
+2. Trocamos a função degrau por funções de ativação não-lineares (como a ReLU que será explicada mais adiante).
+3. Utilizamos algoritmos como a retropropagação (backpropagation) com gradiente descendente para treinar a rede e ajustar os pesos.  Com isso, a rede ganha a capacidade de aprender fronteiras de decisão complexas e curvas — tornando possível reconhecer dígitos manuscritos (como no dataset MNIST) ou classificar objetos complexos em imagens.
+
 # Referências
 - [But what is a neural network? | Chapter 1, Deep learning](https://youtu.be/aircAruvnKk?si=O2XsR2W0H3gZzcDp)
 - GONÇALVES, Juliana Brassolatti. Álgebra linear. Batatais: Claretiano, 2014. 183 p. ISBN 978-85-8377-357-3.
