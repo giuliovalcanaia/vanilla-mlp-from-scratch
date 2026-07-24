@@ -191,8 +191,22 @@ Uma combinação de transformações lineares aplicadas à um vetor equivale à 
 A função de ativação ReLU (Rectified Linear Unit, ou Unidade Linear Retificada) é descrita como uma função contínua por partes muito simples: ela retorna o próprio valor da entrada se ele for positivo, e retorna $0$ se for negativo.$$g(z) = \max(0, z)$$Na forma de função definida por partes:$$g(z) = \begin{cases} z & \text{se } z > 0 \\ 0 & \text{se } z \le 0 \end{cases}$$
 
 # Camada de saída (Output Layer)
-## Vetor de saída
-Como o objetivo é classificar uma base de dados em dígitos de 0 a 9, então a ideia é que o vetor de saída tenha 10 dimensões ($\mathbb{R}^{10 \times 1}$). Cada posição $k$ do vetor representa a probabilidade da imagem ser o dígito $k$. Por isso, o vetor de saída possui uma construção muito semelhante aos vetores das camadas ocultas, com a principal diferença que a função de ativação é a Softmax.
+## Vetor de previsão
+Como o objetivo é classificar uma base de dados em dígitos de 0 a 9, então a ideia é que o vetor de saída tenha 10 dimensões ($\mathbb{R}^{10 \times 1}$). Cada posição $k$ do vetor representa a probabilidade da imagem ser o dígito $k$. Por isso, o vetor de saída possui uma construção muito semelhante aos vetores das camadas ocultas, com a principal diferença que a função de ativação é a Softmax. Este vetor costumamos chamar de $\hat{\mathbf{y}} \in \mathbb{R}^{10 \times 1}$.
+
+$$\hat{\mathbf{y}} = \begin{bmatrix}
+\hat{y}_1 \\
+\hat{y}_2 \\
+\hat{y}_3 \\
+\hat{y}_4 \\
+\hat{y}_5 \\
+\hat{y}_6 \\
+\hat{y}_7 \\
+\hat{y}_8 \\
+\hat{y}_9 \\
+\hat{y}_{10} \\
+\end{bmatrix}_{10 \times 1}$$
+
 
 #### Softmax
 É uma transformação vetorial em que a saída de cada componente depende da soma de todos os elementos do vetor de pré-ativação $\mathbf{z}$. O objetivo principal da função Softmax é converter um vetor de pontuações brutas (logits) em uma distribuição de probabilidade válida.
@@ -205,11 +219,41 @@ $$g(z)_i = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}}$$
 - $K$ (Número Total de Classes):É a quantidade total de opções ou categorias possíveis no problema. No nosso caso como estamos classificando dígitos de $0$ a $9$, $K = 10$.
 - $i$ (Índice da Classe Requisitada):Identifica qual posição do vetor de saída está sendo calculada (onde $i \in \{1, 2, \dots, K\}$).
 
+### O que temos até aqui?
+$$\mathbf{x} =  \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_{783} \\ x_{784} \end{bmatrix}_{784 \times 1} \quad \longrightarrow \quad \mathbf{h}^{(1)} =  \begin{bmatrix} h^{(1)}_1 \\ h^{(1)}_2 \\ \vdots \\ h^{(1)}_{127} \\ h^{(1)}_{128} \end{bmatrix}_{128 \times 1} \quad \longrightarrow \quad \mathbf{h}^{(2)} =  \begin{bmatrix} h^{(2)}_1 \\ h^{(2)}_2 \\ \vdots \\ h^{(2)}_{63} \\ h^{(2)}_{64} \end{bmatrix}_{64 \times 1}$$
+
+
+## O Vetor de Rótulo Real ($\mathbf{y}$) e a Codificação One-Hot
+Para treinar a rede e calcular o erro (*loss*), precisamos comparar a previsão $\hat{\mathbf{y}}$ com a resposta correta, chamada de valor real ou *ground truth* ($\mathbf{y}$).
+
+No dataset de entrada (CSV), o rótulo é fornecido simplesmente como um escalar de $0$ a $9$ (por exemplo, o número $3$). No entanto, para realizar cálculos algébricos com o vetor $\hat{\mathbf{y}}$, precisamos converter esse valor escalar em um vetor de 10 dimensões usando a técnica chamada **One-Hot Encoding**.
+
+Em um vetor *One-Hot*, a posição correspondente ao dígito correto assume o valor $1$, enquanto todas as outras posições assumem o valor $0$.
+
+### Exemplo:
+Se a imagem de entrada for o dígito **3**, a sua representação vetorial real $\mathbf{y} \in \mathbb{R}^{10 \times 1}$ será:
+
+$$\mathbf{y} = \begin{bmatrix}
+0 \\
+0 \\
+0 \\
+1 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+\end{bmatrix}$$
+
 
 # Cálculo de Forward Propagation
-Ao partir do vetor $x$ podemos chegar nos vetores subsequentes por meio da aplicação de duas etapas de cálculo:
+Ao partir do vetor $\mathbf{x}$ podemos chegar nos vetores subsequentes por meio da aplicação de duas etapas de cálculo:
 
-1. 
+1. Transformação linear: esta etapa também é chamada de pré-ativação. Onde $z$ representa o vetor de saída após multiplicar o vetor de entrada pela matriz de pesos e somar o viés. $$\mathbf{z} = \mathbf{W}\mathbf{x} + \mathbf{b}$$
+
+2. Tranformação não linear: Em seguida, o resultado de $\mathbf{z}$ por uma função de ativação $g(\cdot)$ (como a ReLU nas camadas ocultas ou a Softmax na saída) para gerar a saída $\mathbf{a}$. No caso das *Hidden layers*, $\mathbf{a}$ é o próprio vetor $h$, e no caso da camada de saída é o próprio $\mathbf{\hat{y}}$. 
+$$\mathbf{a} = \mathbf{g(z)}$$
 
 
 
